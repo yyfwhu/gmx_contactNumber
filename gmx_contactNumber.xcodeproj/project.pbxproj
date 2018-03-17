@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		335B75EC205CF1130044DA40 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335B75EB205CF1130044DA40 /* main.cpp */; };
+		335B75F4205CF19A0044DA40 /* contactNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335B75F2205CF19A0044DA40 /* contactNumber.cpp */; };
+		335B75F8205D0AFD0044DA40 /* libgromacs.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 335B75F7205D0AFD0044DA40 /* libgromacs.2.4.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,9 @@
 /* Begin PBXFileReference section */
 		335B75E8205CF1130044DA40 /* gmx_contactNumber */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gmx_contactNumber; sourceTree = BUILT_PRODUCTS_DIR; };
 		335B75EB205CF1130044DA40 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		335B75F2205CF19A0044DA40 /* contactNumber.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = contactNumber.cpp; sourceTree = "<group>"; };
+		335B75F3205CF19A0044DA40 /* contactNumber.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = contactNumber.hpp; sourceTree = "<group>"; };
+		335B75F7205D0AFD0044DA40 /* libgromacs.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgromacs.2.4.0.dylib; path = ../../../../usr/local/Cellar/gromacs/2016.4/lib/libgromacs.2.4.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				335B75F8205D0AFD0044DA40 /* libgromacs.2.4.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +49,7 @@
 			children = (
 				335B75EA205CF1130044DA40 /* gmx_contactNumber */,
 				335B75E9205CF1130044DA40 /* Products */,
+				335B75F7205D0AFD0044DA40 /* libgromacs.2.4.0.dylib */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +65,8 @@
 			isa = PBXGroup;
 			children = (
 				335B75EB205CF1130044DA40 /* main.cpp */,
+				335B75F2205CF19A0044DA40 /* contactNumber.cpp */,
+				335B75F3205CF19A0044DA40 /* contactNumber.hpp */,
 			);
 			path = gmx_contactNumber;
 			sourceTree = "<group>";
@@ -120,6 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				335B75EC205CF1130044DA40 /* main.cpp in Sources */,
+				335B75F4205CF19A0044DA40 /* contactNumber.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +184,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/gromacs/2016.4/include/;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/gromacs/2016.4/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -223,6 +235,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/gromacs/2016.4/include/;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/gromacs/2016.4/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -233,6 +247,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -241,6 +259,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
