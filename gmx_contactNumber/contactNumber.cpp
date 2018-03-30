@@ -50,12 +50,18 @@ void contactNumber::initOptions(gmx::IOptionsContainer  *options, gmx::Trajector
         "two groups identified as reference group (ref) and selection group (sel).",
         "The default tolerable range of exisiting contacts is 0.54 nm for carbon-carbon",
         "interactions and 0.46 nm for carbon-noncarbon or noncarbon-noncarbon",
-        "interactions."
+        "interactions.\n",
+        "IMPORTANT: For non-protein, element field is usually missing so that you should,",
+        "set -noproteinonly flag! "
     };
     
     settings->setFlag(TrajectoryAnalysisSettings::efRequireTop);
     
     settings->setHelpText(desc);
+    
+    options->addOption(BooleanOption("proteinonly")
+                       .store(&only_protein_).required().defaultValue(true)
+                       .description("If your selection contains only protein. "));
     
     options->addOption(FileNameOption("o")
                        .filetype(eftPlot).outputFile()
@@ -144,14 +150,23 @@ void contactNumber::analyzeFrame(int frnr, const t_trxframe &fr, t_pbc *pbc,
                 iter_coordinate_sel != sel.coordinates().end() && iter_atomIndice_sel != sel.atomIndices().end();
                 ++iter_coordinate_sel, ++iter_atomIndice_sel)
             {
-                tempDistance = sqrt(  pow(*iter_coordinate_ref[0] - *iter_coordinate_sel[0], 2.0)
-                                    + pow(*iter_coordinate_ref[1] - *iter_coordinate_sel[1], 2.0)
-                                    + pow(*iter_coordinate_ref[2] - *iter_coordinate_sel[2], 2.0));
+                tempDistance = sqrt(  pow(iter_coordinate_ref[0][0] - iter_coordinate_sel[0][0], 2.0)
+                                    + pow(iter_coordinate_ref[0][1] - iter_coordinate_sel[0][1], 2.0)
+                                    + pow(iter_coordinate_ref[0][1] - iter_coordinate_sel[0][2], 2.0));
                 
                 // printf("%f\n", tempDistance);
+
+                if(only_protein_)
+                {
+                    elemRef = atoms.atom[*iter_atomIndice_ref].elem;
+                    elemSel = atoms.atom[*iter_atomIndice_sel].elem;
+                }
+                else
+                {
+                    elemRef = *atoms.atomname[*iter_atomIndice_ref];
+                    elemSel = *atoms.atomname[*iter_atomIndice_sel];
+                }
                 
-                elemRef = atoms.atom[*iter_atomIndice_ref].elem;
-                elemSel = atoms.atom[*iter_atomIndice_sel].elem;
                 
                 if( consider_hydrogen_ || ( !isHydrogen(elemRef) && !isHydrogen(elemSel)))
                 {
@@ -185,8 +200,8 @@ void contactNumber::writeOutput()
 {
     for (size_t g = 0; g < sel_.size(); ++g)
     {
-        fprintf(stderr, "Average mean distance for '%s': %.3f nm\n",
-                sel_[g].name(), avem_->average(0, (int)g));
+        fprintf(stderr, "Average contact number from %s to '%s': %.3f nm\n",
+                ref_.name(), sel_[g].name(), avem_->average(0, (int)g));
     }
 }
 

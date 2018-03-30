@@ -17,6 +17,12 @@
 using namespace std;
 using namespace gmx;
 
+typedef enum
+{
+    ELEMENT,
+    ATOMNAME
+} e_name;
+
 class contactNumber : public TrajectoryAnalysisModule
 {
 public:
@@ -51,6 +57,7 @@ private:
     double           cutoff_noncarbon_;
     
     bool             consider_hydrogen_;
+    bool             only_protein_;
     
     Selection        ref_;
     SelectionList    sel_;
