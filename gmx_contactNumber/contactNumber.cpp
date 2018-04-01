@@ -200,7 +200,7 @@ void contactNumber::writeOutput()
 {
     for (size_t g = 0; g < sel_.size(); ++g)
     {
-        fprintf(stderr, "Average contact number from %s to '%s': %.3f nm\n",
+        fprintf(stderr, "Average contact number from %s to '%s': %.3f \n",
                 ref_.name(), sel_[g].name(), avem_->average(0, (int)g));
     }
 }
