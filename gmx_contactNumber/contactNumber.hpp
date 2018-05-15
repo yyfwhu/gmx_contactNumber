@@ -58,6 +58,7 @@ private:
     
     bool             consider_hydrogen_;
     bool             only_protein_;
+    bool             only_inter_residue_;
     
     Selection        ref_;
     SelectionList    sel_;

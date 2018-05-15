@@ -79,6 +79,10 @@ void contactNumber::initOptions(gmx::IOptionsContainer  *options, gmx::Trajector
     options->addOption(BooleanOption("hydrogen")
                        .store(&consider_hydrogen_).required().defaultValue(false)
                        .description("Whether hydrogen atoms are taken into consideration"));
+
+    options->addOption(BooleanOption("interres_only")
+                       .store(&only_inter_residue_).required().defaultValue(false)
+                       .description("If only inter-residue contacts are considered."));
     
     options->addOption(DoubleOption("cc").store(&cutoff_carbon_)
                        .description("Cutoff for carbon-carbon interactions"));
@@ -167,21 +171,27 @@ void contactNumber::analyzeFrame(int frnr, const t_trxframe &fr, t_pbc *pbc,
                     elemSel = *atoms.atomname[*iter_atomIndice_sel];
                 }
                 
-                
-                if( consider_hydrogen_ || ( !isHydrogen(elemRef) && !isHydrogen(elemSel)))
+                if(only_inter_residue_ && atoms.atom[*iter_atomIndice_ref].resind == atoms.atom[*iter_atomIndice_sel].resind)
                 {
+                    continue;
+                }
+                else{
+                
+                    if( consider_hydrogen_ || ( !isHydrogen(elemRef) && !isHydrogen(elemSel)))
+                    {
                     /*cout<<elemRef;
                     printf("\t");
                     cout<<elemSel;
                     printf("\n");*/
                     
-                    if ( isCarbon(elemRef) && isCarbon(elemSel))
-                    {
-                        if(tempDistance <= cutoff_carbon) { tempContactNumber++;  }
-                    }
-                    else
-                    {
-                        if(tempDistance <= cutoff_noncarbon) { tempContactNumber++;}
+                        if ( isCarbon(elemRef) && isCarbon(elemSel))
+                        {
+                            if(tempDistance <= cutoff_carbon) { tempContactNumber++;  }
+                        }
+                        else
+                        {
+                            if(tempDistance <= cutoff_noncarbon) { tempContactNumber++;}
+                        }   
                     }
                 }
             }
