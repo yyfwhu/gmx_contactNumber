@@ -156,7 +156,7 @@ void contactNumber::analyzeFrame(int frnr, const t_trxframe &fr, t_pbc *pbc,
             {
                 tempDistance = sqrt(  pow(iter_coordinate_ref[0][0] - iter_coordinate_sel[0][0], 2.0)
                                     + pow(iter_coordinate_ref[0][1] - iter_coordinate_sel[0][1], 2.0)
-                                    + pow(iter_coordinate_ref[0][1] - iter_coordinate_sel[0][2], 2.0));
+                                    + pow(iter_coordinate_ref[0][2] - iter_coordinate_sel[0][2], 2.0));
                 
                 // printf("%f\n", tempDistance);
 
