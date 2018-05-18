@@ -17,11 +17,6 @@
 using namespace std;
 using namespace gmx;
 
-typedef enum
-{
-    ELEMENT,
-    ATOMNAME
-} e_name;
 
 class contactNumber : public TrajectoryAnalysisModule
 {
@@ -51,20 +46,27 @@ private:
     AnalysisData                     dataContact_;
     AnalysisDataAverageModulePointer avem_;
     
+    AnalysisNeighborhood               nb_;
+    // vector<AnalysisNeighborhoodSearch> nbsearch_;
+    
     std::string      fnContact_;
+    std::string      fnMap_;
+    std::string      fnMapRaw_;
     
     double           cutoff_carbon_;
     double           cutoff_noncarbon_;
     
     bool             consider_hydrogen_;
-    bool             only_protein_;
-    bool             only_inter_residue_;
+    bool             not_same_residue_;
     
-    Selection        ref_;
+    Selection        all_;
+    SelectionList    ref_;
     SelectionList    sel_;
     
     t_topology      *top_;
     t_atoms          atoms_;
+    
+    AnalysisDataAverageModulePointer avemContact_;
     
 };
 
