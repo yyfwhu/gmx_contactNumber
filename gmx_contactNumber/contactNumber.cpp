@@ -94,9 +94,9 @@ void contactNumber::initOptions(gmx::IOptionsContainer  *options, gmx::Trajector
                        .store(&consider_hydrogen_).required().defaultValue(false)
                        .description("Whether hydrogen atoms are taken into consideration"));
     
-    options->addOption(BooleanOption("intra_residue")
+    options->addOption(BooleanOption("inter_residue")
                        .store(&not_same_residue_).required().defaultValue(false)
-                       .description("Whether contacts within same residue is considered."));
+                       .description("Whether only contacts between different residues are considered."));
     
     options->addOption(DoubleOption("cc").store(&cutoff_carbon_)
                        .description("Cutoff for carbon-carbon interactions"));
