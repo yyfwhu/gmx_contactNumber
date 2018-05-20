@@ -113,7 +113,7 @@ void contactNumber::initAnalysis(const gmx::TrajectoryAnalysisSettings &settings
                                  const gmx::TopologyInformation &top)
 {
     // IMPORTANT: dataset count: sel_; column count: ref_
-    cout << sel_.size() << '\t' << ref_.size() << '\t' << (int)sel_.size() * (int)ref_.size() << endl;
+    //cout << sel_.size() << '\t' << ref_.size() << '\t' << (int)sel_.size() * (int)ref_.size() << endl;
     
     dataContact_.setColumnCount(0, (int)sel_.size() * (int)ref_.size());
     //dataContact_.setColumnCount(0, 200);
@@ -127,7 +127,7 @@ void contactNumber::initAnalysis(const gmx::TrajectoryAnalysisSettings &settings
         plotm->setXAxisIsTime();
         plotm->setYLabel("Contact Number");
         
-        cout << "Set:filename,title,x,y" << endl;
+        //cout << "Set:filename,title,x,y" << endl;
         
         string **setName = new string*[sel_.size()];
         
@@ -150,7 +150,7 @@ void contactNumber::initAnalysis(const gmx::TrajectoryAnalysisSettings &settings
         dataContact_.addModule(plotm);
     }
     
-    cout << "finished: set plot" << endl;
+    //cout << "finished: set plot" << endl;
     
     avemContact_.reset(new AnalysisDataAverageModule());
     dataContact_.addModule(avemContact_);
@@ -176,7 +176,7 @@ void contactNumber::initAnalysis(const gmx::TrajectoryAnalysisSettings &settings
     }
     // Finish: Set original IDs in all in accordance to "selection"
     */
-    cout << "FINISH: initialize" << endl;
+    //cout << "FINISH: initialize" << endl;
     
     
 }
@@ -279,7 +279,7 @@ void contactNumber::analyzeFrame(int frnr, const t_trxframe &fr, t_pbc *pbc,
                 //dh.setPoint(gref, tempContactNumber[gsel][gref]);
                 dh.setPoint(gsel * (int)ref_.size() + gref, tempContactNumber[gsel][gref]);
             }
-            cout << gsel * (int)ref_.size() + gref << '\t' << tempContactNumber[gsel][gref] / 2 << endl;
+            //cout << gsel * (int)ref_.size() + gref << '\t' << tempContactNumber[gsel][gref] / 2 << endl;
         }
     }
     dh.finishFrame();
