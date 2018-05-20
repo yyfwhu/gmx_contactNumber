@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
+#include <string.h>
 
 using namespace std;
 using namespace gmx;
