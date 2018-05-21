@@ -50,24 +50,34 @@ void contactNumber::initOptions(gmx::IOptionsContainer  *options, gmx::Trajector
 {
     static const char *const desc[] =
     {
-        "Contact Number Calculater 2.0 by Yiming Tang @ Fudan. \n",
-        "This tool calculates contact numbers as a function of time between",
-        "Groups. You can choose a bunch of groups for \"reference\" and another bunch of",
-        "groups for \"selection\". Contacts within each reference-selection-group pair will be processed",
-        "individually.\n",
-        "The default tolerable range of exisiting contacts is 0.54 nm for carbon-carbon",
-        "interactions and 0.46 nm for carbon-noncarbon or noncarbon-noncarbon",
-        "interactions.\n",
-        "NOTICE: This program uses atom name field to determine Carbon/Noncarbon atoms,",
-        "so if you are dealing with modified force field you should pay attention to the",
-        "topology that you provide."
+        "Contact Number Calculator 2.0 by Yiming Tang @ Fudan.\n",
+        "I hate manuals so I'm not going to talk about how this program is constructed.",
+        "Nevertheless, it is useful to tell you a little about how to make full use of",
+        "this program to calculate contact number between groups.\n",
+        "Firstly, you should use command line to select three sets of groups: (1) -all: this",
+        "should always contain all atoms in your trajectory file. (2) -reference and (3) -select:",
+        "these two sets of groups support multivalue-selection. The contacts are calculated between",
+        "each group-pair between these two sets reference1-select1, reference1-select2, ...,",
+        "reference2-select1, etc.\n",
+        "Secondly, you should tell the program what output you want. Three kinds of output files can",
+        "be processed: (1) -map: the fraction-of-contact map in XPM file which can be further transfered",
+        "into eps using gmx xpm2ps command. The fraction is defined as the frame-avereged contact number",
+        "of each group devided by the total summation of contact numbers between all group-pairs. (2) -dat:",
+        "the raw fraction-of-contact-map data. (3) -verbose: the contact number between each group-pair as",
+        "a function of time.\n",
+        "NOTICE: As this program contains two group-selections that support multivalue, you should always",
+        "use conmmand line option of select instead of using user-interface.\n",
+        "EXAMPLE: gmx_contactNumber -f traj.xtc -s topology.tpr -all protein -reference $(seq 7 206) -select",
+        "$(seq 7 206), -verbose contactnumber.\n",
+        "For further information contact Yiming Tang (tym@tymworld.com) but there's significant chance that I",
+        "ignore you. Bite me!"
     };
 
     settings->setFlag(TrajectoryAnalysisSettings::efRequireTop);
     
     settings->setHelpText(desc);
     
-    options->addOption(FileNameOption("o")
+    options->addOption(FileNameOption("verbose")
                        .filetype(eftPlot).outputFile()
                        .store(&fnContact_).defaultBasename("contact_number")
                        .description("contact number as a function of time"));
