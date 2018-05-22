@@ -307,7 +307,7 @@ void contactNumber::writeOutput()
     if(!fnMap_.empty() || !fnMapRaw_.empty())
     {
         // Get Sum of Contact Numbers
-        int sum_contact = 0;
+        real sum_contact = 0;
         for(int gsel = 0; gsel < sel_.size(); gsel++)
         {
             for (int gref = 0; gref < ref_.size(); gref++)
