@@ -403,6 +403,7 @@ void contactNumber::writeOutput()
                 fprintf(fpMapRaw, ref_[i].selectionText());
                 fprintf(fpMapRaw, "\t");
             }
+            fprintf(fpMapRaw, "\n");
             
             
             for(int gsel = 0; gsel < sel_.size(); gsel++)
