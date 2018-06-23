@@ -58,6 +58,7 @@ private:
     
     bool             consider_hydrogen_;
     bool             not_same_residue_;
+    bool             probability_;
     
     Selection        all_;
     SelectionList    ref_;

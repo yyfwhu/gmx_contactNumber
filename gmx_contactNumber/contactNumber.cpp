@@ -60,11 +60,12 @@ void contactNumber::initOptions(gmx::IOptionsContainer  *options, gmx::Trajector
         "each group-pair between these two sets reference1-select1, reference1-select2, ...,",
         "reference2-select1, etc.\n",
         "Secondly, you should tell the program what output you want. Three kinds of output files can",
-        "be processed: (1) -map: the fraction-of-contact map in XPM file which can be further transfered",
-        "into eps using gmx xpm2ps command. The fraction is defined as the frame-avereged contact number",
-        "of each group devided by the total summation of contact numbers between all group-pairs. (2) -dat:",
-        "the raw fraction-of-contact-map data. (3) -verbose: the contact number between each group-pair as",
+        "be processed: (1) -map: the frame-averaged contact number/probability map in XPM file which can be further transfered",
+        "into eps using gmx xpm2ps command. (3) -verbose: the frame-averaged contact number/probability between each group-pair as",
         "a function of time.\n",
+        "If -probability flag is specified, a Contact Probability Map is calculated instead of contact number. ",
+        "In Contact Probability Map, two residues are said to be in contact if there exist at least one contact ",
+        "between them.\n",
         "NOTICE: As this program contains two group-selections that support multivalue, you should always",
         "use conmmand line option of select instead of using user-interface.\n",
         "EXAMPLE: gmx_contactNumber -f traj.xtc -s topology.tpr -all protein -reference $(seq 7 206) -select",
@@ -76,6 +77,10 @@ void contactNumber::initOptions(gmx::IOptionsContainer  *options, gmx::Trajector
     settings->setFlag(TrajectoryAnalysisSettings::efRequireTop);
     
     settings->setHelpText(desc);
+    
+    options->addOption(BooleanOption("probability")
+                       .store(&probability_).required().defaultValue(false)
+                       .description("Calculate contact probability instead of contact number"));
     
     options->addOption(FileNameOption("verbose")
                        .filetype(eftPlot).outputFile()
@@ -277,19 +282,28 @@ void contactNumber::analyzeFrame(int frnr, const t_trxframe &fr, t_pbc *pbc,
         {
             //cout << sel_.size() << '\t' << (int)ref_.size() << '\t' << ref_.size() << '\t' << (int)ref_.size() << endl;
             
-            if ( strcmp(ref_[gref].selectionText(), sel_[gsel].selectionText()) == 0)
+            if(probability_)
             {
-                //dh.selectDataSet(gsel);
-                //dh.setPoint(gref, tempContactNumber[gsel][gref] / 2) ;
-                dh.setPoint(gsel * (int)ref_.size() + gref, tempContactNumber[gsel][gref] / 2);
+                dh.setPoint(gsel * (int)ref_.size() + gref, tempContactNumber[gsel][gref] > 0 ? 1 : 0);
             }
             else
             {
-                //dh.selectDataSet(gsel);
-                //dh.setPoint(gref, tempContactNumber[gsel][gref]);
-                dh.setPoint(gsel * (int)ref_.size() + gref, tempContactNumber[gsel][gref]);
+                if ( strcmp(ref_[gref].selectionText(), sel_[gsel].selectionText()) == 0)
+                {
+                    //dh.selectDataSet(gsel);
+                    //dh.setPoint(gref, tempContactNumber[gsel][gref] / 2) ;
+                    dh.setPoint(gsel * (int)ref_.size() + gref, tempContactNumber[gsel][gref] / 2);
+                }
+                else
+                {
+                    //dh.selectDataSet(gsel);
+                    //dh.setPoint(gref, tempContactNumber[gsel][gref]);
+                    dh.setPoint(gsel * (int)ref_.size() + gref, tempContactNumber[gsel][gref]);
+                }
+                //cout << gsel * (int)ref_.size() + gref << '\t' << tempContactNumber[gsel][gref] / 2 << endl;
             }
-            //cout << gsel * (int)ref_.size() + gref << '\t' << tempContactNumber[gsel][gref] / 2 << endl;
+            
+
         }
     }
     dh.finishFrame();
@@ -306,6 +320,7 @@ void contactNumber::writeOutput()
     
     if(!fnMap_.empty() || !fnMapRaw_.empty())
     {
+        /*
         // Get Sum of Contact Numbers
         real sum_contact = 0;
         for(int gsel = 0; gsel < sel_.size(); gsel++)
@@ -314,8 +329,8 @@ void contactNumber::writeOutput()
             {
                 sum_contact += avemContact_->average(0, gsel * (int)ref_.size() + gref);
             }
-        }
-        // Get matrix for Contact Number Fraction
+        }*/
+        // Get matrix for Averaged Contact Number/Probability
         real **matContact = new real*[sel_.size()];
         for(int i = 0; i<sel_.size(); i++)
         {
@@ -326,7 +341,7 @@ void contactNumber::writeOutput()
         {
             for (int gref = 0; gref < ref_.size(); gref++)
             {
-                matContact[gsel][gref] = avemContact_->average(0, gsel * (int)ref_.size() + gref) / sum_contact;
+                matContact[gsel][gref] = avemContact_->average(0, gsel * (int)ref_.size() + gref);
             }
         }
         
@@ -357,10 +372,12 @@ void contactNumber::writeOutput()
                 selVector[i] = i;
             }
             
+            int color_max = probability_ ? 1 : 10;
+
             write_xpm(fpMapXPM, 0, "Contact Number"
                       , "Contact Number", "Reference Group Number", "Selection Group Number"
                       , (int)(sel_.size()), (int)(ref_.size()), selVector, refVector
-                      , matContact, 0, 1, rlo, rhi, &nlevels);
+                      , matContact, 0, color_max, rlo, rhi, &nlevels);
             
             fclose(fpMapXPM);
         }
